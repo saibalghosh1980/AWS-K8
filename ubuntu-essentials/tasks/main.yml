@@ -1,0 +1,16 @@
+---
+# tasks file for ubuntu-essentials
+- debug:
+    msg: "ansible_hostname --> {{ansible_hostname}} and ansible_ssh_host --> {{ ansible_ssh_host }}"
+- debug:
+    msg: "{{ hostvars[inventory_hostname].ansible_distribution }}"
+- debug:
+    msg: "{{ hostvars[inventory_hostname].ansible_distribution_major_version }}"
+- debug:
+    msg: "{{ hostvars[inventory_hostname].ansible_distribution_version }}"
+  when: printdebug|bool
+#- name: Run the equivalent of "apt-get update" as a separate step
+  #become: yes
+  #apt:
+    #update_cache: yes
+    

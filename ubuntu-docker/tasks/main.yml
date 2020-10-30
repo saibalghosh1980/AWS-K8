@@ -1,0 +1,25 @@
+---
+# tasks file for ubuntu-docker
+- name: Remove apt lock file
+  become: yes
+  file:
+    state: absent
+    path: "/var/lib/dpkg/lock-frontend"
+- name: Install a docker-cli.deb package from the internet
+  become: yes
+  apt:
+    deb: https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce-cli_18.09.9~3-0~ubuntu-bionic_amd64.deb
+- name: Install a containerd.io.deb package from the internet
+  become: yes
+  apt:
+    deb: https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/containerd.io_1.2.6-3_amd64.deb
+- name: Install a docker.deb package from the internet
+  become: yes
+  apt:
+    deb: https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce_18.09.9~3-0~ubuntu-bionic_amd64.deb
+- name: Adding user ansible to docker group  
+  become: yes
+  user: 
+    name: ansible
+    group: docker
+    append: yes

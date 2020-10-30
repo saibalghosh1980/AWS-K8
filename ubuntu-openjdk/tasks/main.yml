@@ -1,0 +1,22 @@
+---
+# tasks file for ubuntu-openjdk
+- name: Install OpenJDK 8
+  become: yes
+  apt:
+    name: openjdk-8-jdk
+    state: latest
+- name : Get the JAVA Install Directory
+  shell : readlink -f $(which javac)|sed  's/\/bin\/javac//g'
+  register: java_home_variable
+  
+- name: Debug Value 
+  debug:
+    msg: "java_home_variable value: {{ java_home_variable.stdout }}"
+- name: Add to environment JAVA_HOME
+  become: yes
+  lineinfile:
+       path=/etc/profile
+       regexp='export JAVA_HOME'
+       line='export JAVA_HOME={{ java_home_variable.stdout }}'
+       state=present
+       create=yes

@@ -1,0 +1,9 @@
+---
+    - name: Install K8
+      hosts: awsk8 
+      remote_user: ansible
+      gather_facts: true
+      roles:
+        - { role: ubuntu-essentials}
+        - { role: ubuntu-openjdk}
+        - { role: ubuntu-docker}
