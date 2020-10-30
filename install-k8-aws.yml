@@ -7,3 +7,4 @@
         - { role: ubuntu-essentials}
         - { role: ubuntu-openjdk}
         - { role: ubuntu-docker}
+        - { role: ubuntu-k8}

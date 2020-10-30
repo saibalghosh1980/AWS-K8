@@ -1,2 +1,50 @@
 ---
 # tasks file for ubuntu-k8
+- name: Add the Kubernetes signing key 
+  become: yes
+  shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
+- name: Add specified repository into sources list
+  become: yes
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+- name: Install kubeadm
+  become: yes
+  apt:
+    name: kubeadm
+    state: latest
+- name: Swapoff
+  become: yes
+  shell: swapoff -a
+- name: Initialize Kubernetes on the master node
+  become: yes
+  shell: kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU
+- name: Create .kube directory
+  become: yes
+  file:
+   path: $HOME/.kube
+   state: directory
+- name: Create .kube directory
+  file:
+    path: home/ansible/.kube
+    state: directory
+
+- name: Copy config file to .kube (root home directory)
+  become: yes
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: $HOME/.kube/config
+    owner: ansible
+    group: sudo
+    remote_src: yes
+- name: Deploy a Pod Network through the master node 
+  become: yes
+  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+- name: Copy config file to .kube (ansible home directory)
+  become: yes
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/ansible/.kube/config
+    owner: ansible
+    group: docker
+    remote_src: yes
